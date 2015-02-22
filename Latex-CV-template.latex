@@ -1,0 +1,408 @@
+\documentclass[a4paper, oneside, final]{scrartcl} % Paper options using the scrartcl class
+
+\usepackage{titlesec} % Allows creating custom \section's
+\usepackage{tabularx,colortbl} % Advanced table configurations
+\usepackage[quiet]{fontspec} % Allows font customization
+\usepackage{ifthen}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{calc}
+\usepackage{pdfpages}
+\usepackage[unicode]{hyperref}% unicode is required for unicode pdf metadata
+
+\definecolor{color1}{rgb}{0,0,0}% primary theme color
+\definecolor{color2}{rgb}{0,0,0}% secondary theme color
+\newcommand{\gray}{\rowcolor[gray]{.90}} % Custom highlighting for the work experience and education sections
+
+\defaultfontfeatures{Mapping=tex-text}
+%\setmainfont{DejaVu Sans} % Main document font
+
+\makeatletter
+\newcommand*{\firstname}[1]{\def\@firstname{#1}}
+\newcommand*{\familyname}[1]{\def\@familyname{#1}}
+\renewcommand*{\title}[1]{\def\@title{#1}}
+\newcommand*{\address}[2]{\def\@addressstreet{#1}\def\@addresscity{#2}}
+\newcommand*{\mobile}[1]{\def\@mobile{#1}}
+\newcommand*{\phone}[1]{\def\@phone{#1}}
+\usepackage{marvosym} % Allows the use of symbols
+\renewcommand*{\fax}[1]{\def\@fax{#1}}
+\newcommand*{\email}[1]{\def\@email{#1}}
+\newcommand*{\homepage}[2]{\def\@homepage{#1}\def\@homepagetitle{#2}}
+\newcommand*{\extrainfo}[1]{\def\@extrainfo{#1}}
+\usepackage{xargs}
+\newcommandx*{\photo}[3][1=64pt,2=0.4pt,usedefault]{\def\@photowidth{#1}\def\@photoframewidth{#2}\def\@photo{#3}}% the 1st (optional) argument is the width of the photo, the 2nd (optional) argument is the thickness of the frame around it.
+\makeatother
+
+\RequirePackage[absolute,overlay]{textpos}
+\colorlet{headercolor}{gray}
+\setlength{\TPHorizModule}{1cm} %set scale of x and y coordinates of textblock
+\setlength{\TPVertModule}{1cm}
+\newcommand{\sidesection}[1]{
+  \par\vspace{\baselineskip}{\Large%\headingfont
+    \color{headercolor} #1}
+}
+\newenvironment{aside}{%
+  \begin{textblock}{4.0}(1.7, 7.7)
+  \begin{flushright}
+}{%
+  \end{flushright}
+  \end{textblock}
+}
+
+\newcommand*{\link}[2][]{%
+  \ifthenelse{\equal{#1}{}}%
+    {\href{#2}{#2}}%
+    {\href{#2}{#1}}}
+
+\newcommand*{\httplink}[2][]{%
+  \ifthenelse{\equal{#1}{}}%
+    {\href{http://#2}{#2}}%
+    {\href{http://#2}{#1}}}
+
+\newcommand*{\emaillink}[2][]{%
+  \ifthenelse{\equal{#1}{}}%
+    {\href{mailto:#2}{#2}}%
+    {\href{mailto:#2}{#1}}}
+
+\makeatletter
+\newcommand*{\recomputecvlengths}{%
+  % fancyhdr lengths
+  \renewcommand{\headwidth}{\textwidth}%
+  % regular lengths
+  \setlength{\parskip}{0\p@}}
+\makeatother
+
+\makeatletter
+\newif\if@firstdetailselement\@firstdetailselementtrue
+\newcommand*{\makenewline}{
+  \if@firstdetailselement%
+    \strut% to ensure baseline alignment, e.g. with when put in the margin vs sections that also contains a \strut
+  \else%
+    \\\fi%
+  \@firstdetailselementfalse}
+\makeatother
+
+\makeatletter
+  \hypersetup{
+    breaklinks,
+    baseurl       = http://,
+    pdfborder     = 0 0 0,
+    pdfpagemode   = UseNone,% do not show thumbnails or bookmarks on opening
+    pdfstartpage  = 1,
+    pdfcreator    = {\LaTeX{} with 'moderncv' package},
+%    pdfproducer   = {\LaTeX{}},% will/should be set automatically to the correct TeX engine used
+    bookmarksopen = true,
+    bookmarksdepth= 2,% to show sections and subsections
+    % pdfauthor     = {\@firstname{}~\@familyname{}},
+    % pdftitle      = {\@firstname{}~\@familyname{} -- \@title{}},
+    % pdfsubject    = {Resum\'{e} of \@firstname{}~\@familyname{}},
+    % pdfkeywords   = {\@firstname{}~\@familyname{}, curriculum vit\ae{}, resum\'{e}}
+}
+\makeatother
+
+\newlength{\separatorcolumnwidth}
+\setlength{\separatorcolumnwidth}{0.025\textwidth}
+\addtolength{\voffset}{-0.5in} % Adjust the vertical offset - less whitespace at the top of the page
+\addtolength{\textheight}{3cm} % Adjust the text height - less whitespace at the bottom of the page
+\newlength{\makecvtitlenamewidth}
+\setlength{\makecvtitlenamewidth}{0pt}% dummy value
+\usepackage[left=2cm,right=2cm,top=4cm,bottom=4cm]{geometry}
+
+\titleformat{\section}{\large\scshape\raggedright}{}{4cm}{}[\hspace{4cm}\titlerule] % Section formatting
+%\pagestyle{scrheadings} % Print the headers and footers on all pages
+
+\newcommand*{\namestyle}[1]{{\namefont#1}}
+\newcommand*{\titlestyle}[1]{{\titlefont#1}}
+\newcommand*{\addressstyle}[1]{{\addressfont#1}}
+\newcommand*{\sectionstyle}[1]{{\sectionfont#1}}
+\newcommand*{\subsectionstyle}[1]{{\subsectionfont#1}}
+\newcommand*{\hintstyle}[1]{{\hintfont#1}}
+
+\newcommand*{\namefont}{\fontsize{34}{36}\mdseries\upshape}
+\newcommand*{\addressfont}{\small\mdseries\slshape}
+\newcommand*{\sectionfont}{\Large\mdseries\upshape}
+\newcommand*{\subsectionfont}{\large\mdseries\upshape}
+\newcommand*{\hintfont}{}
+
+\newcommand*{\marvosymbol}[1]{{\fontfamily{mvs}\fontencoding{U}\fontseries{m}\fontshape{n}\selectfont\char#1}}
+\newcommand*{\listitemsymbol}{\labelitemi~}
+\newcommand*{\addresssymbol}{}
+\newcommand*{\mobilesymbol}{\marvosymbol{72}~}
+\newcommand*{\phonesymbol}{\marvosymbol{84}~}
+\newcommand*{\faxsymbol}{\marvosymbol{117}~}
+\newcommand*{\emailsymbol}{\marvosymbol{66}~}
+\newcommand*{\homepagesymbol}{{\Large\marvosymbol{205}}~}
+
+\firstname{Mario} % Your first name
+\familyname{Rossi} % Your last name
+% All information in this block is optional, comment out any lines you don't need
+\title{Curriculum Vitae}
+\address{Piazza Garibaldi 1}{Roma, 12345 IT}
+\mobile{+39 123 456 7890}
+\phone{+39 123 456 7890}
+\fax{+39 123 456 7890}
+\email{mario@rossi.it}
+\homepage{http://mario.rossi.it/}{http://mario.rossi.it/} % The first argument is the url for the clickable link, the second argument is the url displayed in the template - this allows special characters to be displayed such as the tilde $\sim$ in this example
+%\extrainfo{}
+\photo[70pt][0.4pt]{org-mode.png} % The first bracket is the picture height, the second is the thickness of the frame around the picture (0pt for no frame)
+
+\makeatletter
+\newcommand*{\makecvtitle}{%
+  % recompute lengths (in case we are switching from letter to resume, or vice versa)
+  \recomputecvlengths%
+  % optional detailed information box
+  \newbox{\makecvtitledetailsbox}%
+  \savebox{\makecvtitledetailsbox}{%
+    \addressfont\color{color2}%
+    \begin{tabular}[b]{@{}r@{}}%
+      \ifthenelse{\isundefined{\@addressstreet}}{}{\makenewline\addresssymbol\@addressstreet%
+        \ifthenelse{\equal{\@addresscity}{}}{}{\makenewline\@addresscity}}% if \addresstreet is defined, \addresscity will always be defined but could be empty
+      \ifthenelse{\isundefined{\@mobile}}{}{\makenewline\mobilesymbol\@mobile}%
+      \ifthenelse{\isundefined{\@phone}}{}{\makenewline\phonesymbol\@phone}%
+      \ifthenelse{\isundefined{\@fax}}{}{\makenewline\faxsymbol\@fax}%
+      \ifthenelse{\isundefined{\@email}}{}{\makenewline\emailsymbol\emaillink{\@email}}%
+      \ifthenelse{\isundefined{\@homepage}}{}{%
+  \ifthenelse{\equal{\@homepagetitle}{}}% \homepagetitle could be empty
+  {\makenewline\homepagesymbol\httplink{\@homepage}}%
+  {\makenewline\homepagesymbol\httplink[\@homepagetitle]{\@homepage}}}%
+      \ifthenelse{\isundefined{\@extrainfo}}{}{\makenewline\@extrainfo}%
+    \end{tabular}
+  }%
+  % optional photo (pre-rendering)
+  \newbox{\makecvtitlepicturebox}%
+  \savebox{\makecvtitlepicturebox}{%
+    \ifthenelse{\isundefined{\@photo}}%
+    {}%
+    {%
+      \hspace*{\separatorcolumnwidth}%
+      \color{color1}%
+      \setlength{\fboxrule}{\@photoframewidth}%
+      \ifdim\@photoframewidth=0pt%
+        \setlength{\fboxsep}{0pt}\fi%
+      \framebox{\includegraphics[width=\@photowidth]{\@photo}}}}%
+  % name and title
+  \newlength{\makecvtitledetailswidth}\settowidth{\makecvtitledetailswidth}{\usebox{\makecvtitledetailsbox}}%
+  \newlength{\makecvtitlepicturewidth}\settowidth{\makecvtitlepicturewidth}{\usebox{\makecvtitlepicturebox}}%
+  \ifthenelse{\lengthtest{\makecvtitlenamewidth=0pt}}% check for dummy value (equivalent to \ifdim\makecvtitlenamewidth=0pt)
+    {\setlength{\makecvtitlenamewidth}{\textwidth-\makecvtitledetailswidth-\makecvtitlepicturewidth}}%
+    {}%
+  \begin{minipage}[b]{\makecvtitlenamewidth}%
+    \namestyle{\color{color2!50}\@firstname \color{color2}\@familyname}%
+    \ifthenelse{\equal{\@title}{}}{}{\\[1.25em]\titlestyle{\@title}}%
+  \end{minipage}%
+  \hfill%
+  % detailed information
+  \llap{\usebox{\makecvtitledetailsbox}}% \llap is used to suppress the width of the box, allowing overlap if the value of makecvtitlenamewidth is forced
+  % optional photo (rendering)
+  \usebox{\makecvtitlepicturebox}\\[2.5em]%
+  \par}% to avoid weird spacing bug at the first section if no blank line is left after \makecvtitle
+\makeatother
+
+\makeatletter
+\newcommand*{\recipient}[2]{\def\@recipientname{#1}\def\@recipientaddress{#2}}
+\newcommand*{\enclname}{Enclosure}
+\renewcommand*{\date}[1]{\def\@date{#1}}\date{\today}
+\newcommand*{\lettertitle}[1]{\def\@lettertitle{#1}}
+\newcommand*{\opening}[1]{\def\@opening{#1}}
+\newcommand*{\showcontactinfo}[0]{\def\@showcontactinfo{}}
+\newcommand*{\showextracontactinfo}[0]{\def\@showextracontactinfo{}}
+\newcommand*{\closing}[1]{\def\@closing{#1}}
+\newcommand*{\signature}[1]{\def\@signature{#1}}
+\newcommand*{\enclosure}[2][]{%
+  % if an optional argument is provided, use it to redefine \enclname
+  \ifthenelse{\equal{#1}{}}{}{\renewcommand*{\enclname}{#1}}%
+  \def\@enclosure{#2}}
+\makeatother
+
+\makeatletter
+\newcommand*{\makelettertitle}{%
+% recompute lengths (in case we are switching from letter to resume, or vice versa)
+  \recomputeletterlengths%
+  % sender contact info
+  \hfill%
+  \begin{minipage}{.5\textwidth}%
+    \raggedleft%
+    \ifthenelse{\isundefined{\@showcontactinfo}}{}{%
+    \addressfont\textcolor{color2}{%
+      {\bfseries\upshape\@firstname~\@familyname}\@firstdetailselementfalse%
+      \ifthenelse{\isundefined{\@addressstreet}}{}{\makenewline\addresssymbol\@addressstreet%
+        \ifthenelse{\equal{\@addresscity}{}}{}{\makenewline\@addresscity}}% if \addresstreet is defined, \addresscity will always be defined but could be empty
+      \ifthenelse{\isundefined{\@showextracontactinfo}}{}{%
+      \ifthenelse{\isundefined{\@mobile}}{}{\makenewline\mobilesymbol\@mobile}%
+      \ifthenelse{\isundefined{\@phone}}{}{\makenewline\phonesymbol\@phone}%
+      \ifthenelse{\isundefined{\@fax}}{}{\makenewline\faxsymbol\@fax}%
+      \ifthenelse{\isundefined{\@homepage}}{}{%
+  \ifthenelse{\equal{\@homepagetitle}{}}% \homepagetitle could be empty
+  {\makenewline\homepagesymbol\httplink{\@homepage}}%
+  {\makenewline\homepagesymbol\httplink[\@homepagetitle]{\@homepage}}}}%
+      \ifthenelse{\isundefined{\@email}}{}{\makenewline\emailsymbol\emaillink{\@email}}%
+      \ifthenelse{\isundefined{\@extrainfo}}{}{\makenewline\@extrainfo}}%
+  }%
+    \end{minipage}\\[1em]
+  % recipient block
+  \begin{minipage}[t]{.5\textwidth}
+    \raggedright%
+    \addressfont%
+    {\bfseries\upshape\@recipientname}\\%
+    \@recipientaddress%
+  \end{minipage}
+  % date
+  \hfill% US style
+%  \\[1em]% UK style
+  \@date\\[2em]% US informal style: "January 1, 1900"; UK formal style: "01/01/1900"
+  % title
+\ifthenelse{\isundefined{\@lettertitle}}{}{\raggedright{\bfseries\@lettertitle}\\[1.5em]}%
+  % opening
+  \raggedright%
+  \@opening\\[1.5em]%
+  % ensure no extra spacing after \makelettertitle due to a possible blank line
+%  \ignorespacesafterend% not working
+  \hspace{0pt}\par\vspace{-\baselineskip}\vspace{-\parskip}}
+\makeatother
+
+\makeatletter
+\newcommand*{\makeletterclosing}{
+  \@closing%
+  \ifthenelse{\isundefined{\@signature}}{\\[3em]}{\\[1em]\includegraphics[height=25pt]{\@signature}\\}%
+  \mbox{\bfseries \@firstname~\@familyname}%
+  \ifthenelse{\isundefined{\@enclosure}}{}{%
+    \\%
+    \vfill%
+    {\color{color2}\itshape\enclname: \@enclosure}}}
+\makeatother
+
+\makeatletter
+\newcommand*{\recomputeletterlengths}{%
+  \recomputecvlengths%
+  \setlength{\parskip}{6\p@}}
+\makeatother
+
+\begin{document}
+
+\recipient{Dr. John Employer}{Jobs inc.\\Work road 1\\12345 Rome, Italy} % Letter recipient
+\date{\today} % Letter date
+\lettertitle{Application for open position -- Mario Rossi}
+\showcontactinfo % shows name, address, mail
+%\showextracontactinfo %shows phone, fax, homepage
+\opening{Dear Dr. Employer,} % Opening greeting
+\closing{Sincerely yours,} % Closing phrase
+\signature{signature.jpg}
+\enclosure[Attached]{Curriculum Vit\ae{}, Masters certificate, Bachelors certificate} % List of enclosed documents
+
+\makelettertitle % Print letter title
+
+Please hire me! Pleeeeeaseeeeee!!!
+
+\makeletterclosing % Print letter signature
+
+\clearpage
+
+\begin{center} % Center everything in the document
+\makecvtitle % Print the CV title
+
+\begin{aside} % In the aside, each new line forces a line break
+
+\sidesection{Languages}
+\begin{tabularx}{1\columnwidth}{  >{\raggedleft\scshape}X  >{\bfseries}p{1.5cm} }
+Native & Italian \\
+C2 & English \\
+C1 & Klingon
+\end{tabularx}
+
+\sidesection{Programming}\\
+\begin{tabularx}{1\columnwidth}{  >{\raggedleft\scshape}X  >{\bfseries}p{1.5cm} }
+$\star$ $\star$ $\star$ $\star$ $\star$ & Clojure\\
+$\star$ $\star$ $\star$ $\star$ $\star$ & ELisp\\
+$\star$ $\star$ $\star$ $\star$ & C++
+\end{tabularx}
+
+\sidesection{\mbox{Operating Systems}}\\
+\begin{tabularx}{1\columnwidth}{  >{\raggedleft\scshape}X  >{\bfseries}p{1.5cm} }
+$\star$ $\star$ $\star$ $\star$ $\star$ & Linux\\
+$\star$ $\star$ & OS X\\
+$\star$ & Windows
+\end{tabularx}
+
+\sidesection{Tools}\\
+\LaTeX, Emacs\\
+
+\sidesection{Experience}\\
+Applying for jobs\\
+\LaTeX ~ templates\\
+
+\sidesection{Hobbies}\\
+Emacs\\
+
+\end{aside}
+
+\par
+\begingroup
+\leftskip4cm
+\addtolength{\linewidth}{-4cm} %adjust text width
+
+\section{Work Experience}
+
+\begin{tabularx}{\linewidth}{>{\raggedleft\scshape}p{2cm}X}
+\gray Period & \textbf{February 2015 --- Present}\\
+\gray Employer & \textbf{Self employed}\\
+\gray Job Title & \textbf{Writing \LaTeX templates}\\
+\gray Tasks & \emph{Typing, browsing stackoverflow}\\
+~ ~ ~ ~& I designed this nice template
+\end{tabularx}
+
+\vspace{12pt}
+
+\begin{tabularx}{\linewidth}{>{\raggedleft\scshape}p{2cm}X}
+\gray Period & \textbf{June 2013 --- February 2014}\\
+\gray Employer & \textbf{Lousypayers \& Sons} \hfill New York, NY\\
+\gray Job Title & \textbf{Chief employee satisfaction officer}\\
+\gray Tasks & \emph{Coffee Brewing, Coffee cups recollection, Dishwashing}\\
+~ ~ ~ ~& I learned how to brew amazing coffee!
+\end{tabularx}
+
+\vspace{12pt}
+
+\vspace{-12pt}
+
+\section{Education}
+
+\begin{tabularx}{\linewidth}{>{\raggedleft\scshape}p{2cm}X}
+\gray Period & \textbf{September 2010 --- June 2012}\\
+\gray Degree & \textbf{Masters of Arts in Template Production}\\
+\gray Rank & \textbf{First Class Honours}\\
+\gray University & \textbf{University of Latex} \hfill Latex, UK\\
+& Fonts, Advanced Tables, Graphics
+\end{tabularx}
+
+\vspace{12pt}
+
+\begin{tabularx}{\linewidth}{>{\raggedleft\scshape}p{2cm}X}
+\gray Period & \textbf{September 2007 --- September 2010}\\
+\gray Degree & \textbf{Bachelor of Arts in Emacs Proficiency}\\
+\gray University & \textbf{Stallman University} \hfill New York, NY\\
+& General editing, Org Mode, Emacs-Lisp
+\end{tabularx}
+
+\vspace{12pt}
+
+\vspace{-12pt}
+
+\par
+\endgroup
+%\addtolength{\linewidth}{4cm} %adjust text width
+\titleformat{\section}{\large\scshape\raggedright}{}{0em}{}[\titlerule] % remove margin from sections
+
+\section{Qualifications}
+\begin{flushleft}
+\begin{tabular}{ @{} >{\bfseries}l @{\hspace{7ex}} l }
+Typing speed certificate & 150 wpm\\
+\end{tabular}
+\end{flushleft}
+
+\section{References}
+\begin{flushleft}
+References are available upon request.
+\end{flushleft}
+
+\end{center}
+\end{document}
